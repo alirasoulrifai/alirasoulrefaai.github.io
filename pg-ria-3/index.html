@@ -1,0 +1,620 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PG RIA 3 Configurator · ASTE</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Choose the options for your PG RIA 3 patient monitor and send your request to ASTE on WhatsApp.">
+<meta property="og:title" content="PG RIA 3 Configurator · ASTE">
+<meta property="og:description" content="اختر خيارات جهاز مراقبة المريض PG RIA 3 وأرسل طلبك إلى ASTE عبر واتساب.">
+<meta property="og:type" content="website">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one calm column, numbered steps (a real sequence), a monitor-screen panel for the standard parameters, a floating selection bar */
+:root {
+  --bg: #f3f6f5;
+  --surface: #ffffff;
+  --ink: #13201c;
+  --muted: #586a64;
+  --line: #d6e0dc;
+  --accent: #0f7d62;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2f1ec;
+  --danger: #b4321f;
+  --scr-bg: #070c0d;
+  --scr-line: #1d2a2b;
+  --p-ecg: #3ee07a;
+  --p-resp: #f4d03f;
+  --p-spo2: #3ad0f0;
+  --p-nibp: #f2f4f5;
+  --p-temp: #ff9f5a;
+  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  --font-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", Tahoma, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1513; --surface: #15201d; --ink: #e4eeea; --muted: #93a6a0;
+    --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30;
+    --danger: #ff8a75; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1513; --surface: #15201d; --ink: #e4eeea; --muted: #93a6a0;
+  --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30;
+  --danger: #ff8a75; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+html[lang="ar"] body { font-family: var(--font-ar); font-size: 15.5px; }
+.wrap {
+  max-width: 760px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 120px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+
+/* Header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.logo { background: #ffffff; border-radius: 8px; padding: 6px 10px; display: inline-flex; border: 1px solid var(--line); }
+.logo img { height: 34px; width: auto; display: block; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.lang button {
+  font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--muted);
+  padding: 6px 14px; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.lang button:focus-visible, .btn:focus-visible, .opt:focus-within, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.hero { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+html[lang="ar"] .eyebrow { font-family: var(--font-ar); letter-spacing: 0; font-weight: 600; }
+h1 { font-size: clamp(26px, 5vw, 34px); line-height: 1.2; margin: 0; font-weight: 600; text-wrap: balance; letter-spacing: -.01em; }
+.intro { margin: 0; color: var(--muted); max-width: 62ch; }
+.trace { width: 100%; height: 34px; display: block; }
+.trace path { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; opacity: .7; }
+
+/* Steps */
+section { display: flex; flex-direction: column; gap: 14px; }
+.step-h { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 19px; font-weight: 600; }
+.step-n {
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 999px; min-width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+  flex: none; transform: translateY(-2px);
+}
+.sub { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* Models */
+.models { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.model {
+  position: relative; display: flex; flex-direction: row; align-items: center; gap: 16px;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px;
+}
+.model .pic { width: 150px; flex: none; }
+@media (max-width: 480px) { .model .pic { width: 108px; } }
+.model .feat { font-size: 13px; color: var(--muted); }
+.model input { position: absolute; opacity: 0; pointer-events: none; }
+.model .pic { background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 6px; aspect-ratio: 3 / 2; max-width: 100%; }
+.model .pic img { max-height: 100%; object-fit: contain; }
+.model .nm { font-weight: 600; font-size: 16px; }
+.model .meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.model.on { border-color: var(--line); background: var(--surface); }
+.model .tick {
+  position: absolute; top: 10px; inset-inline-end: 10px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); display: none; align-items: center; justify-content: center; font-size: 13px;
+}
+
+
+/* Monitor screen panel (deliberately always dark, like the device) */
+.screen {
+  background: var(--scr-bg); border-radius: 14px; padding: 14px; border: 1px solid var(--scr-line);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; overflow: hidden;
+}
+@media (max-width: 480px) { .screen { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.par { padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 0 0 1px var(--scr-line); }
+.par b { font-family: var(--font-mono); font-weight: 500; font-size: 20px; letter-spacing: .02em; }
+.par span { font-size: 12.5px; color: #9fb1ad; }
+.par.ecg b { color: var(--p-ecg); } .par.resp b { color: var(--p-resp); }
+.par.spo2 b, .par.pr b { color: var(--p-spo2); } .par.nibp b { color: var(--p-nibp); } .par.temp b { color: var(--p-temp); }
+.box {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.box h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--muted); }
+.inbox { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 18px; }
+@media (max-width: 520px) { .inbox { grid-template-columns: 1fr; } }
+.inbox li { display: flex; gap: 8px; align-items: baseline; font-size: 14px; }
+.inbox li::before { content: "✓"; color: var(--accent); font-weight: 600; flex: none; }
+
+/* Option groups */
+.groups { display: flex; flex-direction: column; gap: 22px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.group-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.group-h h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.group-h .count { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.hint { margin: 0; font-size: 13.5px; color: var(--muted); }
+.opts { display: flex; flex-direction: column; gap: 6px; }
+.opt {
+  display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+}
+.opt input { width: 19px; height: 19px; margin: 2px 0 0; accent-color: var(--accent); flex: none; cursor: pointer; }
+.opt .tx { display: flex; flex-direction: column; min-width: 0; }
+.opt .nm { font-weight: 500; }
+.opt .ds { font-size: 13.5px; color: var(--muted); }
+.opt.on { border-color: var(--accent); background: var(--accent-soft); }
+
+/* Review */
+.review { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 18px; }
+.sum { display: flex; flex-direction: column; gap: 8px; }
+.sum-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14.5px; border-bottom: 1px dashed var(--line); padding-bottom: 8px; }
+.sum-row span:first-child { color: var(--muted); }
+.sum-row span:last-child { font-weight: 500; text-align: end; }
+.sum-list { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14.5px; }
+.sum-empty { margin: 0; font-size: 14px; color: var(--muted); }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .fields { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 13px; font-weight: 500; color: var(--muted); }
+.field input, .field textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 9px 11px; width: 100%;
+}
+.field textarea { min-height: 76px; resize: vertical; }
+.field .err { font-size: 12.5px; color: var(--danger); }
+.field.bad input { border-color: var(--danger); }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); width: max-content; }
+.qty button { font: inherit; font-size: 18px; width: 40px; height: 40px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.qty input { width: 56px; text-align: center; border: 0; border-inline: 1px solid var(--line); border-radius: 0; height: 40px; background: var(--surface); font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  font: inherit; font-weight: 600; font-size: 15px; border-radius: 10px; padding: 12px 18px; cursor: pointer;
+  border: 1.5px solid var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.note { margin: 0; font-size: 13px; color: var(--muted); }
+.contact { font-size: 13.5px; color: var(--muted); }
+.contact b { color: var(--ink); font-weight: 500; }
+.ltr { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+#fallback { width: 100%; min-height: 160px; font-family: var(--font-mono); font-size: 12.5px; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+.link-btn { font: inherit; font-size: 13px; color: var(--muted); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 0; }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 4px; }
+
+/* Floating bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding-top: 12px;
+  pointer-events: none;
+}
+.bar-in {
+  pointer-events: auto; max-width: 760px; margin: 0 auto; background: var(--ink); color: var(--bg);
+  border-radius: 14px; padding: 10px 10px 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .22);
+}
+html[dir="rtl"] .bar-in { padding: 10px 16px 10px 10px; }
+.bar-in .lbl { font-size: 14px; min-width: 0; }
+.bar-in .lbl b { font-weight: 600; }
+.bar-in .btn { padding: 9px 14px; font-size: 14px; border-color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="logo"><img src="data:image/jpeg;base64,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" alt="A.S.T.E. – Al Shatta for Technical Engineering"></span>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" id="lang-ar" data-lang="ar" aria-pressed="false">عربي</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <span class="eyebrow" data-t="tag">Patient monitor configurator</span>
+    <h1 data-t="title">Configure your PG RIA 3 patient monitor</h1>
+    <p class="intro" data-t="intro">Tick the options you need. Standard items are already included. When you finish, send your request to ASTE on WhatsApp.</p>
+    <svg class="trace" viewBox="0 0 760 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 H120 l6 -3 6 3 H160 l4 4 6 -24 6 30 5 -10 H230 q10 -8 20 0 H330 l6 -3 6 3 H370 l4 4 6 -24 6 30 5 -10 H440 q10 -8 20 0 H540 l6 -3 6 3 H580 l4 4 6 -24 6 30 5 -10 H650 q10 -8 20 0 H760"></path></svg>
+  </div>
+
+  <section aria-labelledby="h1s">
+    <h2 class="step-h" id="h1s"><span class="step-n">1</span><span data-t="s1">Your monitor</span></h2>
+    <div class="models" id="models"><div class="model on" data-m="ria3"><input type="radio" name="model" id="m-ria3" value="ria3" checked="" tabindex="-1" aria-hidden="true"><span class="pic"><img src="data:image/jpeg;base64,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" alt="PG RIA 3"></span><span><span class="nm">PG RIA 3</span><br><span class="meta"><span class="ltr">13.3″</span> screen · <span class="ltr">1920×1080</span> · <span class="ltr">3.7</span> kg</span><br><span class="feat">Capacitive multi-touch screen</span></span></div></div>
+  </section>
+
+  <section aria-labelledby="h2s">
+    <h2 class="step-h" id="h2s"><span class="step-n">2</span><span data-t="s2">Included as standard</span></h2>
+    <p class="sub" data-t="s2sub">Measured parameters on every unit</p>
+    <div class="screen" id="screen"><div class="par ecg"><b>ECG</b><span>3 / 5-lead · arrhythmia · ST</span></div><div class="par resp"><b>RESP</b><span>Impedance respiration</span></div><div class="par spo2"><b>SpO₂</b><span>Saturation with PI</span></div><div class="par pr"><b>PR</b><span>Pulse rate</span></div><div class="par nibp"><b>NIBP</b><span>Manual · Auto · STAT</span></div><div class="par temp"><b>TEMP</b><span>2 channels</span></div></div>
+    <div class="box">
+      <h3 data-t="box">In the box</h3>
+      <ul class="inbox" id="inbox"><li>Adult 5-lead ECG cable (European standard)</li><li>ECG electrodes ×25</li><li>Adult SpO₂ sensor</li><li>SpO₂ extension cable</li><li>Adult NIBP cuff</li><li>NIBP extension tube</li><li>Skin temperature sensor</li><li>Power cord</li></ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="h3s">
+    <h2 class="step-h" id="h3s"><span class="step-n">3</span><span data-t="s3">Options</span></h2>
+    <div class="groups" id="groups"><div class="group" data-g="ecg"><div class="group-h"><h3>ECG</h3><span class="count"></span></div><div class="opts"><label class="opt" data-o="ecg3"><input type="checkbox" id="o-ecg3" value="ecg3"><span class="tx"><span class="nm">3-lead ECG cable</span><span class="ds">Basic rhythm monitoring with three electrodes.</span></span></label><label class="opt" data-o="ecg12"><input type="checkbox" id="o-ecg12" value="ecg12"><span class="tx"><span class="nm">12-lead ECG module with 10-lead cable</span><span class="ds">Full 12-lead ECG on the monitor.</span></span></label></div></div><div class="group" data-g="sizes"><div class="group-h"><h3>Sensor and cuff sizes</h3><span class="count"></span></div><p class="hint">The standard set is for adults. Add the sizes your patients need. For infant and neonatal use, ASTE confirms suitability with the quotation.</p><div class="opts"><label class="opt" data-o="spo2Ped"><input type="checkbox" id="o-spo2Ped" value="spo2Ped"><span class="tx"><span class="nm">Pediatric SpO₂ sensor</span></span></label><label class="opt" data-o="spo2Neo"><input type="checkbox" id="o-spo2Neo" value="spo2Neo"><span class="tx"><span class="nm">Neonatal SpO₂ sensor</span></span></label><label class="opt" data-o="cuffPed"><input type="checkbox" id="o-cuffPed" value="cuffPed"><span class="tx"><span class="nm">Pediatric NIBP cuff</span></span></label><label class="opt" data-o="cuffInf"><input type="checkbox" id="o-cuffInf" value="cuffInf"><span class="tx"><span class="nm">Infant NIBP cuff</span></span></label><label class="opt" data-o="cuffNeo"><input type="checkbox" id="o-cuffNeo" value="cuffNeo"><span class="tx"><span class="nm">Neonatal NIBP cuff</span></span></label><label class="opt" data-o="cuffLarge"><input type="checkbox" id="o-cuffLarge" value="cuffLarge"><span class="tx"><span class="nm">Large adult NIBP cuff</span></span></label><label class="opt" data-o="cuffThigh"><input type="checkbox" id="o-cuffThigh" value="cuffThigh"><span class="tx"><span class="nm">Thigh NIBP cuff</span></span></label></div></div><div class="group" data-g="hemo"><div class="group-h"><h3>Invasive pressure and cardiac output</h3><span class="count"></span></div><div class="opts"><label class="opt" data-o="ibpBuilt"><input type="checkbox" id="o-ibpBuilt" value="ibpBuilt"><span class="tx"><span class="nm">Built-in 2-channel IBP</span><span class="ds">Arterial, CVP, PA, atrial or intracranial pressure, inside the monitor.</span></span></label><label class="opt" data-o="ibpPlug"><input type="checkbox" id="o-ibpPlug" value="ibpPlug"><span class="tx"><span class="nm">2-channel IBP plug-in module</span><span class="ds">Two invasive pressure channels as a removable module.</span></span></label><label class="opt" data-o="co"><input type="checkbox" id="o-co" value="co"><span class="tx"><span class="nm">Built-in cardiac output (C.O.)</span><span class="ds">Cardiac output by thermodilution.</span></span></label><label class="opt" data-o="cco"><input type="checkbox" id="o-cco" value="cco"><span class="tx"><span class="nm">CCO plug-in module</span><span class="ds">Continuous non-invasive cardiac output and stroke volume by thoracic bioimpedance.</span></span></label></div></div><div class="group" data-g="co2"><div class="group-h"><h3>Capnography (EtCO₂)</h3><span class="count"></span></div><p class="hint">One CO₂ source is usually enough. The multi-gas modules below also measure CO₂.</p><div class="opts"><label class="opt" data-o="etBuilt"><input type="checkbox" id="o-etBuilt" value="etBuilt"><span class="tx"><span class="nm">Built-in sidestream EtCO₂</span><span class="ds">End-tidal CO₂ and airway respiration rate through a sampling line.</span></span></label><label class="opt" data-o="etPlug"><input type="checkbox" id="o-etPlug" value="etPlug"><span class="tx"><span class="nm">Sidestream EtCO₂ plug-in module</span><span class="ds">The same measurement as a removable module.</span></span></label><label class="opt" data-o="etMain"><input type="checkbox" id="o-etMain" value="etMain"><span class="tx"><span class="nm">Mainstream EtCO₂ external module</span><span class="ds">Sensor on the airway adapter between the endotracheal tube and the Y-piece.</span></span></label><label class="opt" data-o="etMasSide"><input type="checkbox" id="o-etMasSide" value="etMasSide"><span class="tx"><span class="nm">Masimo sidestream EtCO₂ external module</span></span></label><label class="opt" data-o="etMasMain"><input type="checkbox" id="o-etMasMain" value="etMasMain"><span class="tx"><span class="nm">Masimo mainstream EtCO₂ external module</span></span></label></div></div><div class="group" data-g="gas"><div class="group-h"><h3>Anesthetic gases</h3><span class="count"></span></div><p class="hint">For operating rooms.</p><div class="opts"><label class="opt" data-o="mgSidePlug"><input type="checkbox" id="o-mgSidePlug" value="mgSidePlug"><span class="tx"><span class="nm">Sidestream multi-gas plug-in module</span><span class="ds">CO₂, isoflurane, sevoflurane.</span></span></label><label class="opt" data-o="mgMainExt"><input type="checkbox" id="o-mgMainExt" value="mgMainExt"><span class="tx"><span class="nm">Mainstream multi-gas external module</span><span class="ds">CO₂, isoflurane, sevoflurane.</span></span></label><label class="opt" data-o="mgMasMain"><input type="checkbox" id="o-mgMasMain" value="mgMasMain"><span class="tx"><span class="nm">Masimo mainstream multi-gas external module</span><span class="ds">CO₂, O₂, isoflurane, sevoflurane, halothane, enflurane, desflurane.</span></span></label><label class="opt" data-o="mgMasSide"><input type="checkbox" id="o-mgMasSide" value="mgMasSide"><span class="tx"><span class="nm">Masimo sidestream multi-gas external module</span><span class="ds">CO₂, O₂, isoflurane, sevoflurane, halothane, enflurane, desflurane.</span></span></label></div></div><div class="group" data-g="neuro"><div class="group-h"><h3>Anesthesia depth and neuromuscular block</h3><span class="count"></span></div><div class="opts"><label class="opt" data-o="doa"><input type="checkbox" id="o-doa" value="doa"><span class="tx"><span class="nm">DOA plug-in module</span><span class="ds">Depth of anesthesia from processed EEG (qCON / qNOX).</span></span></label><label class="opt" data-o="tof"><input type="checkbox" id="o-tof" value="tof"><span class="tx"><span class="nm">TOF plug-in module</span><span class="ds">Neuromuscular block monitoring by train-of-four stimulation.</span></span></label></div></div><div class="group" data-g="hw"><div class="group-h"><h3>Upgrades and connectivity</h3><span class="count"></span></div><div class="opts"><label class="opt" data-o="masSpo2"><input type="checkbox" id="o-masSpo2" value="masSpo2"><span class="tx"><span class="nm">Built-in Masimo SpO₂</span><span class="ds">Masimo pulse oximetry built into the monitor.</span></span></label><label class="opt" data-o="printer"><input type="checkbox" id="o-printer" value="printer"><span class="tx"><span class="nm">Built-in thermal printer</span><span class="ds">Prints up to 3 waveforms on 50 mm paper.</span></span></label><label class="opt" data-o="wifi"><input type="checkbox" id="o-wifi" value="wifi"><span class="tx"><span class="nm">Wi-Fi</span><span class="ds">Wireless connection to the central monitoring station.</span></span></label><label class="opt" data-o="bt"><input type="checkbox" id="o-bt" value="bt"><span class="tx"><span class="nm">Bluetooth</span></span></label></div></div><div class="group" data-g="spares"><div class="group-h"><h3>Spare accessories</h3><span class="count"></span></div><p class="hint">Extra units of the standard accessories.</p><div class="opts"><label class="opt" data-o="sp5"><input type="checkbox" id="o-sp5" value="sp5"><span class="tx"><span class="nm">Spare 5-lead ECG cable</span></span></label><label class="opt" data-o="spEl"><input type="checkbox" id="o-spEl" value="spEl"><span class="tx"><span class="nm">Spare ECG electrodes ×25</span></span></label><label class="opt" data-o="spSpo2"><input type="checkbox" id="o-spSpo2" value="spSpo2"><span class="tx"><span class="nm">Spare adult SpO₂ sensor</span></span></label><label class="opt" data-o="spExt"><input type="checkbox" id="o-spExt" value="spExt"><span class="tx"><span class="nm">Spare SpO₂ extension cable</span></span></label><label class="opt" data-o="spCuff"><input type="checkbox" id="o-spCuff" value="spCuff"><span class="tx"><span class="nm">Spare adult NIBP cuff</span></span></label><label class="opt" data-o="spTube"><input type="checkbox" id="o-spTube" value="spTube"><span class="tx"><span class="nm">Spare NIBP extension tube</span></span></label><label class="opt" data-o="spTemp"><input type="checkbox" id="o-spTemp" value="spTemp"><span class="tx"><span class="nm">Spare skin temperature sensor</span></span></label><label class="opt" data-o="spCord"><input type="checkbox" id="o-spCord" value="spCord"><span class="tx"><span class="nm">Spare power cord</span></span></label></div></div></div>
+  </section>
+
+  <section aria-labelledby="h4s" id="send">
+    <h2 class="step-h" id="h4s"><span class="step-n">4</span><span data-t="s4">Review and send</span></h2>
+    <div class="review">
+      <div class="sum" id="sum"><div class="sum-row"><span>Model</span><span>PG RIA 3 · <span class="ltr">13.3″</span></span></div><div class="sum-row"><span>Quantity</span><span class="ltr">1</span></div><div class="sum-row"><span>Included as standard</span><span>✓</span></div><p class="sum-empty">No options selected. ASTE will quote the standard configuration.</p></div>
+      <form class="fields" id="form" novalidate="">
+        <div class="field full">
+          <label for="f-qty" data-t="qty">Number of monitors</label>
+          <div class="qty">
+            <button type="button" id="q-minus" aria-label="−">−</button>
+            <input id="f-qty" type="number" inputmode="numeric" min="1" max="999" value="1">
+            <button type="button" id="q-plus" aria-label="+">+</button>
+          </div>
+        </div>
+        <div class="field" data-req="">
+          <label for="f-name" data-t="name">Doctor name</label>
+          <input id="f-name" type="text" autocomplete="name">
+          <span class="err" hidden="" data-t="req">Please fill this in.</span>
+        </div>
+        <div class="field" data-req="">
+          <label for="f-hosp" data-t="hosp">Hospital</label>
+          <input id="f-hosp" type="text" autocomplete="organization">
+          <span class="err" hidden="" data-t="req">Please fill this in.</span>
+        </div>
+        <div class="field">
+          <label for="f-dept" data-t="dept">Department</label>
+          <input id="f-dept" type="text">
+        </div>
+        <div class="field">
+          <label for="f-city" data-t="city">City</label>
+          <input id="f-city" type="text">
+        </div>
+        <div class="field full">
+          <label for="f-phone" data-t="phone">Phone (optional)</label>
+          <input id="f-phone" type="tel" autocomplete="tel" class="ltr">
+        </div>
+        <div class="field full">
+          <label for="f-notes" data-t="notes">Notes (optional)</label>
+          <textarea id="f-notes"></textarea>
+        </div>
+      </form>
+      <div class="actions">
+        <a class="btn primary" id="wa" href="https://wa.me/963995068832?text=PG%20RIA%203%20configuration%20request%0A%0AModel%3A%20PG%20RIA%203%20(13.3%22%20screen)%0AQuantity%3A%201%0AStandard%3A%20main%20unit%20with%20standard%20accessories%0A%0ASelected%20options%3A%20none%20(standard%20configuration)%0A%0ADoctor%3A%20-%0AHospital%3A%20-" target="_blank" rel="noopener"><span data-t="send">Send on WhatsApp</span></a>
+        <button type="button" class="btn ghost" id="copy"><span data-t="copy">Copy summary</span></button>
+      </div>
+      <p class="note" data-t="after">WhatsApp opens with your request filled in. Press send in WhatsApp to deliver it.</p>
+      <p class="note" id="copy-status" role="status" hidden=""></p>
+      <textarea id="fallback" hidden="" readonly="" aria-label="Summary"></textarea>
+      <div class="contact"><span data-t="to">Requests go to</span>: <b data-t="who">Eng. Ali Refaai, ASTE</b> · <b class="ltr">+963 99 506 8832</b></div>
+    </div>
+  </section>
+
+  <footer>
+    <span data-t="foot">Options as listed in the Progetti S.r.l. configuration sheet. ASTE confirms compatibility and availability in the formal quotation.</span>
+    <span>A.S.T.E. – Al Shatta for Technical Engineering · <span class="ltr">www.aste-sy.com</span></span>
+  </footer>
+</div>
+
+<div class="bar" aria-live="polite">
+  <div class="bar-in">
+    <span class="lbl" id="bar-lbl">No options selected</span>
+    <a class="btn primary" href="#send" id="bar-btn"><span data-t="review">Review and send</span></a>
+  </div>
+</div>
+
+<p id="js-err" hidden style="margin:0;padding:10px 16px;font-size:12px;color:#b4321f;background:#fff0ed"></p>
+<script>
+window.addEventListener("error", function (e) {
+  var p = document.getElementById("js-err");
+  if (p) { p.hidden = false; p.textContent = "Page error: " + (e && e.message ? e.message : "unknown") + (e && e.lineno ? " (line " + e.lineno + ")" : ""); }
+});
+</script>
+<script>
+(function () {
+  "use strict";
+  var WA = "963995068832";
+
+  var MODELS = [
+    { id: "ria3", name: "PG RIA 3", inch: "13.3", kg: "3.7" }
+  ];
+
+  var PARAMS = [
+    { c: "ecg", k: "ECG", en: "3 / 5-lead · arrhythmia · ST", ar: "3 / 5 أقطاب · اضطراب النظم · ST" },
+    { c: "resp", k: "RESP", en: "Impedance respiration", ar: "التنفس بالمعاوقة" },
+    { c: "spo2", k: "SpO₂", en: "Saturation with PI", ar: "الإشباع مع مؤشر التروية" },
+    { c: "pr", k: "PR", en: "Pulse rate", ar: "معدل النبض" },
+    { c: "nibp", k: "NIBP", en: "Manual · Auto · STAT", ar: "يدوي · آلي · STAT" },
+    { c: "temp", k: "TEMP", en: "2 channels", ar: "قناتان" }
+  ];
+
+  var INBOX = [
+    { en: "Adult 5-lead ECG cable (European standard)", ar: "كبل تخطيط قلب خماسي الأقطاب للبالغين (معيار أوروبي)" },
+    { en: "ECG electrodes ×25", ar: "مساري تخطيط القلب ×25" },
+    { en: "Adult SpO₂ sensor", ar: "حساس SpO₂ للبالغين" },
+    { en: "SpO₂ extension cable", ar: "كبل تمديد SpO₂" },
+    { en: "Adult NIBP cuff", ar: "كم ضغط للبالغين" },
+    { en: "NIBP extension tube", ar: "أنبوب تمديد كم الضغط" },
+    { en: "Skin temperature sensor", ar: "حساس حرارة جلدي" },
+    { en: "Power cord", ar: "كبل الطاقة" }
+  ];
+
+  var GROUPS = [
+    { id: "ecg", en: "ECG", ar: "تخطيط القلب", items: [
+      { id: "ecg3", en: "3-lead ECG cable", ar: "كبل تخطيط قلب ثلاثي الأقطاب", den: "Basic rhythm monitoring with three electrodes.", dar: "مراقبة أساسية لنظم القلب بثلاثة مساري." },
+      { id: "ecg12", en: "12-lead ECG module with 10-lead cable", ar: "وحدة تخطيط قلب 12 اشتقاقاً مع كبل 10 أقطاب", den: "Full 12-lead ECG on the monitor.", dar: "تخطيط قلب كامل باثني عشر اشتقاقاً على الشاشة." }
+    ]},
+    { id: "sizes", en: "Sensor and cuff sizes", ar: "مقاسات الحساسات وأكمام الضغط",
+      hen: "The standard set is for adults. Add the sizes your patients need. For infant and neonatal use, ASTE confirms suitability with the quotation.",
+      har: "المجموعة القياسية مخصصة للبالغين. أضف المقاسات التي يحتاجها مرضاك. بالنسبة للرضّع وحديثي الولادة، تؤكد ASTE مدى الملاءمة مع عرض السعر.",
+      items: [
+      { id: "spo2Ped", en: "Pediatric SpO₂ sensor", ar: "حساس SpO₂ للأطفال" },
+      { id: "spo2Neo", en: "Neonatal SpO₂ sensor", ar: "حساس SpO₂ لحديثي الولادة" },
+      { id: "cuffPed", en: "Pediatric NIBP cuff", ar: "كم ضغط للأطفال" },
+      { id: "cuffInf", en: "Infant NIBP cuff", ar: "كم ضغط للرضّع" },
+      { id: "cuffNeo", en: "Neonatal NIBP cuff", ar: "كم ضغط لحديثي الولادة" },
+      { id: "cuffLarge", en: "Large adult NIBP cuff", ar: "كم ضغط للبالغين، مقاس كبير" },
+      { id: "cuffThigh", en: "Thigh NIBP cuff", ar: "كم ضغط للفخذ" }
+    ]},
+    { id: "hemo", en: "Invasive pressure and cardiac output", ar: "الضغط الغازي ونتاج القلب", items: [
+      { id: "ibpBuilt", en: "Built-in 2-channel IBP", ar: "ضغط غازي مدمج، قناتان", den: "Arterial, CVP, PA, atrial or intracranial pressure, inside the monitor.", dar: "ضغط شرياني أو وريدي مركزي أو رئوي أو أذيني أو داخل القحف، ضمن الجهاز." },
+      { id: "ibpPlug", en: "2-channel IBP plug-in module", ar: "وحدة ضغط غازي قابلة للتركيب، قناتان", den: "Two invasive pressure channels as a removable module.", dar: "قناتا ضغط غازي ضمن وحدة قابلة للفك والتركيب." },
+      { id: "co", en: "Built-in cardiac output (C.O.)", ar: "نتاج القلب المدمج (C.O.)", den: "Cardiac output by thermodilution.", dar: "قياس نتاج القلب بطريقة التخفيف الحراري." },
+      { id: "cco", en: "CCO plug-in module", ar: "وحدة CCO قابلة للتركيب", den: "Continuous non-invasive cardiac output and stroke volume by thoracic bioimpedance.", dar: "نتاج القلب وحجم الضربة بشكل مستمر وغير غازي عبر المعاوقة الحيوية الصدرية." }
+    ]},
+    { id: "co2", en: "Capnography (EtCO₂)", ar: "قياس ثاني أكسيد الكربون (EtCO₂)",
+      hen: "One CO₂ source is usually enough. The multi-gas modules below also measure CO₂.",
+      har: "يكفي عادةً مصدر واحد لقياس CO₂، كما تقيس وحدات الغازات المتعددة أدناه CO₂ أيضاً.",
+      items: [
+      { id: "etBuilt", en: "Built-in sidestream EtCO₂", ar: "EtCO₂ جانبي مدمج", den: "End-tidal CO₂ and airway respiration rate through a sampling line.", dar: "قياس CO₂ نهاية الزفير ومعدل التنفس عبر خط سحب العينة." },
+      { id: "etPlug", en: "Sidestream EtCO₂ plug-in module", ar: "وحدة EtCO₂ جانبية قابلة للتركيب", den: "The same measurement as a removable module.", dar: "القياس نفسه ضمن وحدة قابلة للفك والتركيب." },
+      { id: "etMain", en: "Mainstream EtCO₂ external module", ar: "وحدة EtCO₂ رئيسية خارجية", den: "Sensor on the airway adapter between the endotracheal tube and the Y-piece.", dar: "حساس على محوّل مجرى الهواء بين الأنبوب الرغامي ووصلة Y." },
+      { id: "etMasSide", en: "Masimo sidestream EtCO₂ external module", ar: "وحدة Masimo EtCO₂ جانبية خارجية" },
+      { id: "etMasMain", en: "Masimo mainstream EtCO₂ external module", ar: "وحدة Masimo EtCO₂ رئيسية خارجية" }
+    ]},
+    { id: "gas", en: "Anesthetic gases", ar: "غازات التخدير", hen: "For operating rooms.", har: "لغرف العمليات.", items: [
+      { id: "mgSidePlug", en: "Sidestream multi-gas plug-in module", ar: "وحدة غازات متعددة جانبية قابلة للتركيب", den: "CO₂, isoflurane, sevoflurane.", dar: "CO₂، إيزوفلوران، سيفوفلوران." },
+      { id: "mgMainExt", en: "Mainstream multi-gas external module", ar: "وحدة غازات متعددة رئيسية خارجية", den: "CO₂, isoflurane, sevoflurane.", dar: "CO₂، إيزوفلوران، سيفوفلوران." },
+      { id: "mgMasMain", en: "Masimo mainstream multi-gas external module", ar: "وحدة Masimo للغازات المتعددة، رئيسية خارجية", den: "CO₂, O₂, isoflurane, sevoflurane, halothane, enflurane, desflurane.", dar: "CO₂، O₂، إيزوفلوران، سيفوفلوران، هالوثان، إنفلوران، ديسفلوران." },
+      { id: "mgMasSide", en: "Masimo sidestream multi-gas external module", ar: "وحدة Masimo للغازات المتعددة، جانبية خارجية", den: "CO₂, O₂, isoflurane, sevoflurane, halothane, enflurane, desflurane.", dar: "CO₂، O₂، إيزوفلوران، سيفوفلوران، هالوثان، إنفلوران، ديسفلوران." }
+    ]},
+    { id: "neuro", en: "Anesthesia depth and neuromuscular block", ar: "عمق التخدير والحصار العصبي العضلي", items: [
+      { id: "doa", en: "DOA plug-in module", ar: "وحدة DOA لعمق التخدير", den: "Depth of anesthesia from processed EEG (qCON / qNOX).", dar: "عمق التخدير من تخطيط الدماغ المعالَج (qCON / qNOX)." },
+      { id: "tof", en: "TOF plug-in module", ar: "وحدة TOF", den: "Neuromuscular block monitoring by train-of-four stimulation.", dar: "مراقبة الحصار العصبي العضلي بالتنبيه الرباعي (Train-of-Four)." }
+    ]},
+    { id: "hw", en: "Upgrades and connectivity", ar: "ترقيات واتصال", items: [
+      { id: "masSpo2", en: "Built-in Masimo SpO₂", ar: "SpO₂ مدمج من Masimo", den: "Masimo pulse oximetry built into the monitor.", dar: "تقنية Masimo لقياس إشباع الأكسجين مدمجة في الجهاز." },
+      { id: "printer", en: "Built-in thermal printer", ar: "طابعة حرارية مدمجة", den: "Prints up to 3 waveforms on 50 mm paper.", dar: "تطبع حتى 3 منحنيات على ورق بعرض 50 مم." },
+      { id: "wifi", en: "Wi-Fi", ar: "Wi-Fi", den: "Wireless connection to the central monitoring station.", dar: "اتصال لاسلكي مع محطة المراقبة المركزية." },
+      { id: "bt", en: "Bluetooth", ar: "Bluetooth" }
+    ]},
+    { id: "spares", en: "Spare accessories", ar: "ملحقات احتياطية", hen: "Extra units of the standard accessories.", har: "قطع إضافية من الملحقات القياسية.", items: [
+      { id: "sp5", en: "Spare 5-lead ECG cable", ar: "كبل تخطيط قلب خماسي الأقطاب احتياطي" },
+      { id: "spEl", en: "Spare ECG electrodes ×25", ar: "مساري تخطيط قلب احتياطية ×25" },
+      { id: "spSpo2", en: "Spare adult SpO₂ sensor", ar: "حساس SpO₂ احتياطي للبالغين" },
+      { id: "spExt", en: "Spare SpO₂ extension cable", ar: "كبل تمديد SpO₂ احتياطي" },
+      { id: "spCuff", en: "Spare adult NIBP cuff", ar: "كم ضغط احتياطي للبالغين" },
+      { id: "spTube", en: "Spare NIBP extension tube", ar: "أنبوب تمديد كم ضغط احتياطي" },
+      { id: "spTemp", en: "Spare skin temperature sensor", ar: "حساس حرارة جلدي احتياطي" },
+      { id: "spCord", en: "Spare power cord", ar: "كبل طاقة احتياطي" }
+    ]}
+  ];
+
+  var T = {
+    en: {
+      tag: "Patient monitor configurator", title: "Configure your PG RIA 3 patient monitor",
+      intro: "Tick the options you need. Standard items are already included. When you finish, send your request to ASTE on WhatsApp.",
+      s1: "Your monitor", touch: "Capacitive multi-touch screen", s2: "Included as standard", s2sub: "Measured parameters on every unit", box: "In the box",
+      s3: "Options", s4: "Review and send", qty: "Number of monitors", name: "Doctor name", hosp: "Hospital",
+      dept: "Department", city: "City", phone: "Phone (optional)", notes: "Notes (optional)", send: "Send on WhatsApp",
+      copy: "Copy summary", copied: "Summary copied.", copyFail: "Copying is blocked here. Select the text below and copy it.",
+      none: "No options selected. ASTE will quote the standard configuration.", review: "Review and send",
+      req: "Please fill this in.", after: "WhatsApp opens with your request filled in. Press send in WhatsApp to deliver it.",
+      to: "Requests go to", who: "Eng. Ali Refaai, ASTE", foot: "Options as listed in the Progetti S.r.l. configuration sheet. ASTE confirms compatibility and availability in the formal quotation.",
+      model: "Model", units: "Quantity", optsH: "Selected options", screen: "screen", kg: "kg",
+      sel: function (n) { return n === 0 ? "No options selected" : n === 1 ? "<b>1</b> option selected" : "<b>" + n + "</b> options selected"; },
+      grp: function (n) { return n ? n + " selected" : ""; }
+    },
+    ar: {
+      tag: "أداة تهيئة جهاز مراقبة المريض", title: "هيّئ جهاز مراقبة المريض PG RIA 3",
+      intro: "حدّد الخيارات التي تحتاجها. العناصر القياسية مشمولة مسبقاً. عند الانتهاء، أرسل طلبك إلى ASTE عبر واتساب.",
+      s1: "جهازك", touch: "شاشة لمس سعوية متعددة اللمس", s2: "مشمول بشكل قياسي", s2sub: "المعاملات المقاسة في كل جهاز", box: "محتويات العبوة",
+      s3: "الخيارات الإضافية", s4: "المراجعة والإرسال", qty: "عدد الأجهزة", name: "اسم الطبيب", hosp: "المستشفى",
+      dept: "القسم", city: "المدينة", phone: "الهاتف (اختياري)", notes: "ملاحظات (اختياري)", send: "إرسال عبر واتساب",
+      copy: "نسخ الملخص", copied: "تم نسخ الملخص.", copyFail: "النسخ غير متاح هنا. حدّد النص أدناه وانسخه يدوياً.",
+      none: "لم تُحدَّد أي خيارات. ستقدّم ASTE عرضاً للتهيئة القياسية.", review: "مراجعة وإرسال",
+      req: "يرجى تعبئة هذا الحقل.", after: "يفتح واتساب والطلب جاهز. اضغط إرسال داخل واتساب لإيصاله.",
+      to: "تُرسل الطلبات إلى", who: "م. علي رفاعي، ASTE", foot: "الخيارات وفق جدول التهيئة الصادر عن Progetti S.r.l. تؤكد ASTE التوافق والتوفر في عرض السعر الرسمي.",
+      model: "الطراز", units: "العدد", optsH: "الخيارات المحددة", screen: "شاشة", kg: "كغ",
+      sel: function (n) { return n === 0 ? "لا خيارات محددة" : n === 1 ? "خيار واحد محدد" : n === 2 ? "خياران محددان" : n <= 10 ? "<b>" + n + "</b> خيارات محددة" : "<b>" + n + "</b> خياراً محدداً"; },
+      grp: function (n) { return n ? n + " محدد" : ""; }
+    }
+  };
+
+  var state = { lang: "en", model: "ria3", sel: {} };
+
+  function store(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
+  var saved = store(function (s) { return JSON.parse(s.getItem("pgria3-cfg") || "null"); });
+  if (saved && typeof saved === "object") {
+    if (saved.lang === "ar" || saved.lang === "en") state.lang = saved.lang;
+    if (MODELS.some(function (m) { return m.id === saved.model; })) state.model = saved.model;
+    if (saved.sel && typeof saved.sel === "object") state.sel = saved.sel;
+  }
+  var h = (location.hash || "").replace("#", "");
+  if (h === "ar" || h === "en") state.lang = h;
+
+  function save() { store(function (s) { s.setItem("pgria3-cfg", JSON.stringify(state)); }); }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function L() { return T[state.lang]; }
+  function name(o) { return state.lang === "ar" ? o.ar : o.en; }
+
+  function renderStatic() {
+    var t = L();
+    document.documentElement.lang = state.lang;
+    document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = t[el.getAttribute("data-t")]; });
+    $("lang-en").setAttribute("aria-pressed", state.lang === "en");
+    $("lang-ar").setAttribute("aria-pressed", state.lang === "ar");
+
+    var prevImg = document.querySelector("#models img");
+    var imgSrc = prevImg ? prevImg.getAttribute("src") : "";
+    $("models").innerHTML = MODELS.map(function (m) {
+      return '<div class="model" data-m="' + m.id + '"><input type="radio" name="model" id="m-' + m.id + '" value="' + m.id + '" checked tabindex="-1" aria-hidden="true">' +
+        '<span class="pic"><img src="' + imgSrc + '" alt="' + m.name + '"></span>' +
+        '<span><span class="nm">' + m.name + '</span><br><span class="meta"><span class="ltr">' + m.inch + '″</span> ' + t.screen + ' · <span class="ltr">1920×1080</span> · <span class="ltr">' + m.kg + '</span> ' + t.kg + '</span><br><span class="feat">' + t.touch + '</span></span></div>';
+    }).join("");
+
+    $("screen").innerHTML = PARAMS.map(function (p) {
+      return '<div class="par ' + p.c + '"><b>' + p.k + '</b><span>' + esc(state.lang === "ar" ? p.ar : p.en) + '</span></div>';
+    }).join("");
+
+    $("inbox").innerHTML = INBOX.map(function (i) { return "<li>" + esc(name(i)) + "</li>"; }).join("");
+
+    $("groups").innerHTML = GROUPS.map(function (g) {
+      var hint = state.lang === "ar" ? g.har : g.hen;
+      return '<div class="group" data-g="' + g.id + '"><div class="group-h"><h3>' + esc(name(g)) + '</h3><span class="count"></span></div>' +
+        (hint ? '<p class="hint">' + esc(hint) + '</p>' : "") +
+        '<div class="opts">' + g.items.map(function (it) {
+          var d = state.lang === "ar" ? it.dar : it.den;
+          return '<label class="opt" data-o="' + it.id + '"><input type="checkbox" id="o-' + it.id + '" value="' + it.id + '">' +
+            '<span class="tx"><span class="nm">' + esc(name(it)) + '</span>' + (d ? '<span class="ds">' + esc(d) + '</span>' : "") + '</span></label>';
+        }).join("") + '</div></div>';
+    }).join("");
+  }
+
+  function selectedItems() {
+    var out = [];
+    GROUPS.forEach(function (g) { g.items.forEach(function (it) { if (state.sel[it.id]) out.push({ g: g, it: it }); }); });
+    return out;
+  }
+  function model() { return MODELS.filter(function (m) { return m.id === state.model; })[0]; }
+  function qty() { var q = parseInt($("f-qty").value, 10); return isNaN(q) || q < 1 ? 1 : Math.min(q, 999); }
+  function val(id) { return $(id).value.trim(); }
+
+  function message() {
+    var m = model(), items = selectedItems(), lines = [];
+    lines.push("PG RIA 3 configuration request");
+    lines.push("");
+    lines.push("Model: " + m.name + " (" + m.inch + "\" screen)");
+    lines.push("Quantity: " + qty());
+    lines.push("Standard: main unit with standard accessories");
+    lines.push("");
+    if (items.length) {
+      lines.push("Selected options:");
+      GROUPS.forEach(function (g) {
+        var inG = items.filter(function (x) { return x.g === g; });
+        if (!inG.length) return;
+        lines.push(g.en + ":");
+        inG.forEach(function (x) { lines.push("- " + x.it.en); });
+      });
+    } else {
+      lines.push("Selected options: none (standard configuration)");
+    }
+    lines.push("");
+    lines.push("Doctor: " + (val("f-name") || "-"));
+    lines.push("Hospital: " + (val("f-hosp") || "-"));
+    if (val("f-dept")) lines.push("Department: " + val("f-dept"));
+    if (val("f-city")) lines.push("City: " + val("f-city"));
+    if (val("f-phone")) lines.push("Phone: " + val("f-phone"));
+    if (val("f-notes")) { lines.push(""); lines.push("Notes: " + val("f-notes")); }
+    return lines.join("\n");
+  }
+
+  function update() {
+    var t = L(), items = selectedItems(), m = model();
+    document.querySelectorAll(".model").forEach(function (el) {
+      var on = el.getAttribute("data-m") === state.model;
+      el.classList.toggle("on", on);
+      el.querySelector("input").checked = on;
+    });
+    document.querySelectorAll(".opt").forEach(function (el) {
+      var on = !!state.sel[el.getAttribute("data-o")];
+      el.classList.toggle("on", on);
+      el.querySelector("input").checked = on;
+    });
+    GROUPS.forEach(function (g) {
+      var n = g.items.filter(function (it) { return state.sel[it.id]; }).length;
+      var c = document.querySelector('[data-g="' + g.id + '"] .count');
+      if (c) c.textContent = t.grp(n);
+    });
+
+    var html = '<div class="sum-row"><span>' + t.model + '</span><span>' + m.name + ' · <span class="ltr">' + m.inch + '″</span></span></div>' +
+      '<div class="sum-row"><span>' + t.units + '</span><span class="ltr">' + qty() + '</span></div>' +
+      '<div class="sum-row"><span>' + t.s2 + '</span><span>✓</span></div>';
+    if (items.length) {
+      html += '<strong style="font-size:14px">' + t.optsH + '</strong><ul class="sum-list">' +
+        items.map(function (x) { return "<li>" + esc(name(x.it)) + "</li>"; }).join("") + "</ul>";
+    } else {
+      html += '<p class="sum-empty">' + t.none + "</p>";
+    }
+    $("sum").innerHTML = html;
+    $("bar-lbl").innerHTML = t.sel(items.length);
+    $("wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(message());
+    save();
+  }
+
+  function validate() {
+    var ok = true, first = null;
+    document.querySelectorAll("[data-req]").forEach(function (f) {
+      var inp = f.querySelector("input"), bad = !inp.value.trim();
+      f.classList.toggle("bad", bad);
+      f.querySelector(".err").hidden = !bad;
+      if (bad) { ok = false; if (!first) first = inp; }
+    });
+    if (first) first.focus();
+    return ok;
+  }
+
+  function wire() {
+    $("models").addEventListener("change", function (e) { if (e.target.name === "model") { state.model = e.target.value; update(); } });
+    $("groups").addEventListener("change", function (e) {
+      if (e.target.type === "checkbox") {
+        if (e.target.checked) state.sel[e.target.value] = true; else delete state.sel[e.target.value];
+        update();
+      }
+    });
+  }
+
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { state.lang = b.getAttribute("data-lang"); renderStatic(); update(); });
+  });
+  $("form").addEventListener("input", function (e) {
+    var f = e.target.closest("[data-req]");
+    if (f && e.target.value.trim()) { f.classList.remove("bad"); f.querySelector(".err").hidden = true; }
+    update();
+  });
+  $("form").addEventListener("submit", function (e) { e.preventDefault(); });
+  $("q-minus").addEventListener("click", function () { $("f-qty").value = Math.max(1, qty() - 1); update(); });
+  $("q-plus").addEventListener("click", function () { $("f-qty").value = Math.min(999, qty() + 1); update(); });
+  $("wa").addEventListener("click", function (e) {
+    update();
+    if (!validate()) e.preventDefault();
+  });
+  $("copy").addEventListener("click", function () {
+    var text = message(), st = $("copy-status"), fb = $("fallback");
+    function fail() {
+      st.textContent = L().copyFail; st.hidden = false;
+      fb.value = text; fb.hidden = false; fb.focus(); fb.select();
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        st.textContent = L().copied; st.hidden = false; fb.hidden = true;
+      }, fail);
+    } catch (err) { fail(); }
+  });
+
+  renderStatic();
+  wire();
+  update();
+})();
+</script>
+
+</body></html>
