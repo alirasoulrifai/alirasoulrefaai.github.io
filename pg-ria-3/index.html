@@ -21,6 +21,7 @@
   --accent: #0f7d62;
   --accent-ink: #ffffff;
   --accent-soft: #e2f1ec;
+  --band: #e8eeec;
   --danger: #b4321f;
   --scr-bg: #070c0d;
   --scr-line: #1d2a2b;
@@ -36,13 +37,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0d1513; --surface: #15201d; --ink: #e4eeea; --muted: #93a6a0;
-    --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30;
+    --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30; --band: #1c2a26;
     --danger: #ff8a75; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1513; --surface: #15201d; --ink: #e4eeea; --muted: #93a6a0;
-  --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30;
+  --line: #26352f; --accent: #3cc39d; --accent-ink: #062019; --accent-soft: #163a30; --band: #1c2a26;
   --danger: #ff8a75; color-scheme: dark;
 }
 
@@ -71,7 +72,7 @@ html[lang="ar"] body { font-family: var(--font-ar); font-size: 15.5px; }
   padding: 6px 14px; cursor: pointer;
 }
 .lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-.lang button:focus-visible, .btn:focus-visible, .opt:focus-within, input:focus-visible, textarea:focus-visible {
+.lang button:focus-visible, .btn:focus-visible, .opt:has(input:focus-visible), input:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px;
 }
 .hero { display: flex; flex-direction: column; gap: 8px; }
@@ -134,23 +135,32 @@ section { display: flex; flex-direction: column; gap: 14px; }
 .inbox li { display: flex; gap: 8px; align-items: baseline; font-size: 14px; }
 .inbox li::before { content: "✓"; color: var(--accent); font-weight: 600; flex: none; }
 
-/* Option groups */
-.groups { display: flex; flex-direction: column; gap: 22px; }
-.group { display: flex; flex-direction: column; gap: 8px; }
-.group-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.group-h h3 { margin: 0; font-size: 16px; font-weight: 600; }
-.group-h .count { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
-.hint { margin: 0; font-size: 13.5px; color: var(--muted); }
-.opts { display: flex; flex-direction: column; gap: 6px; }
+/* Option groups: each group is its own panel with a tinted header band */
+.groups { display: flex; flex-direction: column; gap: 18px; }
+.group { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.group-h {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--band); padding: 12px 16px; border-bottom: 1px solid var(--line);
+}
+.group-h h3 { margin: 0; font-size: 16.5px; font-weight: 600; color: var(--ink); }
+.group-h .count {
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent-ink); background: var(--accent);
+  border-radius: 999px; padding: 2px 10px;
+}
+html[lang="ar"] .group-h .count { font-family: var(--font-ar); }
+.group-h .count:empty { display: none; }
+.hint { margin: 0; font-size: 13.5px; color: var(--muted); padding: 10px 16px 2px; }
+.opts { display: flex; flex-direction: column; }
 .opt {
   display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+  padding: 12px 16px; border-top: 1px solid var(--line);
 }
+.group-h + .opts .opt:first-child { border-top: 0; }
 .opt input { width: 19px; height: 19px; margin: 2px 0 0; accent-color: var(--accent); flex: none; cursor: pointer; }
 .opt .tx { display: flex; flex-direction: column; min-width: 0; }
 .opt .nm { font-weight: 500; }
 .opt .ds { font-size: 13.5px; color: var(--muted); }
-.opt.on { border-color: var(--accent); background: var(--accent-soft); }
+.opt.on { background: var(--accent-soft); }
 
 /* Review */
 .review { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 18px; }
@@ -434,7 +444,7 @@ window.addEventListener("error", function (e) {
       to: "تُرسل الطلبات إلى", who: "م. علي رفاعي، ASTE", foot: "الخيارات وفق جدول التهيئة الصادر عن Progetti S.r.l. تؤكد ASTE التوافق والتوفر في عرض السعر الرسمي.",
       model: "الطراز", units: "العدد", optsH: "الخيارات المحددة", screen: "شاشة", kg: "كغ",
       sel: function (n) { return n === 0 ? "لا خيارات محددة" : n === 1 ? "خيار واحد محدد" : n === 2 ? "خياران محددان" : n <= 10 ? "<b>" + n + "</b> خيارات محددة" : "<b>" + n + "</b> خياراً محدداً"; },
-      grp: function (n) { return n ? n + " محدد" : ""; }
+      grp: function (n) { return n ? "المحدد: " + n : ""; }
     }
   };
 
